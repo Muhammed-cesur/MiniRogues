@@ -10,7 +10,7 @@ public class Movement : MonoBehaviour
     private float gravityValue = -3.81f;
 
     private Animator _anim;
-    public float playerSpeed = 3f;
+    public float playerSpeed;
     
     InputSystem inputSystem;
 
@@ -31,12 +31,12 @@ public class Movement : MonoBehaviour
         if (move != Vector3.zero)
         {
             gameObject.transform.forward = move;
-            _anim.SetBool("Walk", true);
-            _anim.SetBool("Run", false);
+            //_anim.SetBool("Walk", true);
+            _anim.SetBool("Run", true); // false normalde
         }
         if (move == Vector3.zero) 
         {
-            _anim.SetBool("Walk", false);
+           // _anim.SetBool("Walk", false);
             _anim.SetBool("Run", false);
         }
 
@@ -47,7 +47,7 @@ public class Movement : MonoBehaviour
 
 
             _anim.SetBool("Run", true);
-            _anim.SetBool("Walk", false);
+            //_anim.SetBool("Walk", false);
         }
         else
         {
@@ -56,6 +56,8 @@ public class Movement : MonoBehaviour
         
         controller.Move(playerVelocity * Time.deltaTime);
         playerVelocity.y += gravityValue * Time.deltaTime;
+
+
     }
 }
 
