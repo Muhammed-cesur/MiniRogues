@@ -11,7 +11,12 @@ public class Movement : MonoBehaviour
 
     private Animator _anim;
     public float playerSpeed;
-    
+
+    [SerializeField] private float _Currenthealth;
+    [SerializeField] private float _Maxhealth;
+
+     [SerializeField] private HealthBarSystem HealthBar;
+
     InputSystem inputSystem;
 
     private void Start()
@@ -23,7 +28,10 @@ public class Movement : MonoBehaviour
 
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Space)) 
+        {
+            PlayerTakeDamage(5);
+        }
 
         Vector3 move = new Vector3(inputSystem.HorizontalInput(), 0, inputSystem.VerticalInput());
         controller.Move(move * Time.deltaTime * playerSpeed);
@@ -58,6 +66,26 @@ public class Movement : MonoBehaviour
         playerVelocity.y += gravityValue * Time.deltaTime;
 
 
+    }
+    public void PlayerTakeDamage(float damage)
+    {
+        _Currenthealth -= damage;
+        _anim.SetTrigger("Hit");
+        HealthBar.UpdateHealthBar(_Currenthealth, _Maxhealth);
+
+        if (_Currenthealth <= 0)
+        {
+
+            _anim.SetTrigger("Die");
+
+            Invoke(nameof(DestroyPlayer), 3f);
+        }
+
+
+    }
+    void DestroyPlayer()
+    {
+        Destroy(gameObject);
     }
 }
 

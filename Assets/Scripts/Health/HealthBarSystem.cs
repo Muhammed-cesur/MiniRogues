@@ -16,6 +16,7 @@ public class HealthBarSystem : MonoBehaviour
     }
     private void Update()
     {
+       if(_Camera)
        transform.rotation = _Camera.transform.rotation;
        
        

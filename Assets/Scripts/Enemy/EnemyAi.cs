@@ -58,7 +58,7 @@ public class EnemyAi : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space)) 
         {
-         TakeDamage(5);
+            EnemyTakeDamage(5);
             
             
         }
@@ -142,7 +142,7 @@ public class EnemyAi : MonoBehaviour
         
     }
 
-    public void TakeDamage(float damage)
+    public void EnemyTakeDamage(float damage)
     {
         _Currenthealth -= damage;
         _anim.SetTrigger("Hit");
