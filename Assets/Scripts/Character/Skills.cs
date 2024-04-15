@@ -69,7 +69,6 @@ public class Skills : MonoBehaviour
     }
     public void FireBall() 
     {
-         
         _anim.SetTrigger("FireShoot");
         movement.playerSpeed = 0;
         fireBall.Play();
