@@ -10,6 +10,9 @@ public class EnemyAi : MonoBehaviour
     private NavMeshAgent _agent;
     private Animator _anim;
 
+    [SerializeField] private float _Damage;
+
+
 
 
     // walk Range
@@ -21,7 +24,7 @@ public class EnemyAi : MonoBehaviour
 
     [SerializeField] private float AttackDelay;
     [SerializeField] private bool Attacked;
-    [SerializeField] private GameObject Project;
+    [SerializeField] private GameObject Fireball;
 
     // Player and world Check
     public float SightRange, AttackRange;
@@ -30,14 +33,15 @@ public class EnemyAi : MonoBehaviour
     [SerializeField] private LayerMask GroundCeck, PlayerCheck;
 
 
-    [SerializeField] private float _Currenthealth;
-    [SerializeField] private float _Maxhealth;
+    public float _EnemyCurrenthealth;
+    public float _Maxhealth;
     
     
     
    
 
     [SerializeField] private HealthBarSystem HealthBar;
+    [SerializeField] Attack Attack;
 
 
 
@@ -56,13 +60,6 @@ public class EnemyAi : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)) 
-        {
-            EnemyTakeDamage(5);
-            
-            
-        }
-
         // player in attack range or in walk range check
         PlayerInSightRange = Physics.CheckSphere(transform.position, SightRange, PlayerCheck);
         PlayerInAttackRange = Physics.CheckSphere(transform.position, AttackRange, PlayerCheck);
@@ -116,7 +113,7 @@ public class EnemyAi : MonoBehaviour
         _anim.SetBool("Walk", false);
 
     }
-    void AttackPlayer()
+  public  void AttackPlayer()
     {
         _agent.SetDestination(transform.position);
 
@@ -125,12 +122,23 @@ public class EnemyAi : MonoBehaviour
         {
             ///Attack code here
             _anim.SetTrigger("Attack");
+            Attack.PlayerTakeDamage(_Damage);
+            if (Fireball) 
+            {
+                Rigidbody rb = Instantiate(Fireball, transform.position, Quaternion.identity).GetComponent<Rigidbody>();
+                rb.AddForce(transform.forward * 32f, ForceMode.Impulse);
+                rb.AddForce(transform.up * 8f, ForceMode.Impulse);
+            }
 
             ///End of attack code
 
             Attacked = true;
             
             Invoke(nameof(ResetAttack), AttackDelay);
+            if (Attack._PlayerCurrenthealth==0) 
+            {
+             Attacked = false;
+            }
 
         }
         _anim.SetBool("Walk", false);
@@ -144,11 +152,11 @@ public class EnemyAi : MonoBehaviour
 
     public void EnemyTakeDamage(float damage)
     {
-        _Currenthealth -= damage;
+        _EnemyCurrenthealth -= damage;
         _anim.SetTrigger("Hit");
-        HealthBar.UpdateHealthBar(_Currenthealth, _Maxhealth);
+        HealthBar.UpdateHealthBar(_EnemyCurrenthealth, _Maxhealth);
 
-        if (_Currenthealth <= 0)
+        if (_EnemyCurrenthealth <= 0)
         {
             _agent.speed = 0;
             SightRange = 0;
